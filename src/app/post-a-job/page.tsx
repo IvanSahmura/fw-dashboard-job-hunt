@@ -19,6 +19,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import InputSkills from '@/components/organism/inputSkills'
+import CKEditor from '@/components/organism/CKEditor'
 
 
 interface PostJobPageProps{
@@ -159,6 +161,16 @@ const PostJobPage: FC<PostJobPageProps> = ({}) => {
                      </FormItem>
                    )}
                  />
+                 </FieldInput>
+
+                 <FieldInput title='Required Skills' subtitle='Add required skills for the job'>
+                  <InputSkills form={form} name={'add skills'} label={'add skills'} />
+
+                 </FieldInput>
+
+
+                 <FieldInput title='Job Description' subtitle='Job titles must be describe one position'>
+                   <CKEditor form={form} name="job description"/>
                  </FieldInput>
             </form>
         </Form>
