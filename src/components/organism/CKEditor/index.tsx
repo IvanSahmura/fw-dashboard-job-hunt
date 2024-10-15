@@ -1,26 +1,50 @@
-import { Separator } from '@/components/ui/separator';
-import React, { FC, ReactNode } from 'react'
+import { FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { FC, useEffect, useRef } from "react";
 
-interface FieldInputProps{
-    children: ReactNode,
-    title: string;
-    subtitle: string
+interface CKEditorProps {
+	form: any;
+	name: any;
+	editorLoaded?: boolean;
 }
 
-const FieldInput: FC<FieldInputProps> = ({children, title, subtitle}) => {
-  return (
-    <>
-        <div className='flex flex-row items-start'>
-            <div className='w-[35%]'>
-                <div className='font-semibold'>{title}</div>
-                <div className='text-gray-400 w-80'>{subtitle}</div>
-            </div>
-        {children}
-        </div>
-        <Separator />
+const CKEditor: FC<CKEditorProps> = ({ form, name, editorLoaded }) => {
+	const editorRef = useRef<any>();
+	const { CKEditor, ClassicEditor } = editorRef.current || {};
 
-    </>
-  )
-}
+	useEffect(() => {
+		editorRef.current = {
+			CKEditor: require("@ckeditor/ckeditor5-react").CKEditor,
+			ClassicEditor: require("@ckeditor/ckeditor5-build-classic"),
+		};
+	}, []);
 
-export default FieldInput
+	return (
+		<>
+			{editorLoaded ? (
+				<div>
+					<CKEditor
+						editor={ClassicEditor}
+						data={form.getValues(name)}
+						onChange={(event: any, editor: any) => {
+							const data = editor.getData();
+							form.setValue(name, data);
+						}}
+					/>
+					<FormField
+						control={form.control}
+						name={name}
+						render={({ field }) => (
+							<FormItem>
+								<FormMessage className="mt-3" />
+							</FormItem>
+						)}
+					/>
+				</div>
+			) : (
+				<div>Loading...</div>
+			)}
+		</>
+	);
+};
+
+export default CKEditor;

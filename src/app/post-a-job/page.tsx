@@ -2,7 +2,7 @@
 
 import { jobFormSchema } from '@/lib/form-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from "zod"
 import { ArrowLeftIcon } from 'lucide-react'
@@ -29,6 +29,8 @@ interface PostJobPageProps{
 
 const PostJobPage: FC<PostJobPageProps> = ({}) => {
   
+    const [editorLoaded, setEditorLoaded] = useState<boolean>(false)
+
     const form = useForm<z.infer<typeof jobFormSchema>>({
         resolver: zodResolver(jobFormSchema),
         defaultValues:{
@@ -39,6 +41,10 @@ const PostJobPage: FC<PostJobPageProps> = ({}) => {
     const onSubmit = (val: z.infer<typeof jobFormSchema>) => {
         console.log(val)
     }
+
+    useEffect(() => (
+      setEditorLoaded(true)
+    ), [])
   
     return (
     <div>
@@ -170,7 +176,19 @@ const PostJobPage: FC<PostJobPageProps> = ({}) => {
 
 
                  <FieldInput title='Job Description' subtitle='Job titles must be describe one position'>
-                   <CKEditor form={form} name="job description"/>
+                   <CKEditor form={form} name="jobDescription" editorLoaded={editorLoaded}/>
+                 </FieldInput>
+
+                 <FieldInput title='Responsibilities' subtitle='Outline the core responsibilities of the position'>
+                   <CKEditor form={form} name="responsibility" editorLoaded={editorLoaded}/>
+                 </FieldInput>
+
+                 <FieldInput title='Who You Are' subtitle='Add your preffered candidates'>
+                   <CKEditor form={form} name="whoYouare" editorLoaded={editorLoaded}/>
+                 </FieldInput>
+
+                 <FieldInput title='Nice-To-Haves' subtitle='Add nice-to-have skills and qulifications for the role to encourage a more diverse set of candidates to apply'>
+                   <CKEditor form={form} name="niceToHaves" editorLoaded={editorLoaded}/>
                  </FieldInput>
             </form>
         </Form>
